@@ -19,9 +19,8 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            qt_version: 5.15.2
-          - os: macos-latest
-            qt_version: 5.15.2
+            qt_version: 6.7.0
+            arch: win64_msvc2022_64
 
     runs-on: ${{ matrix.os }}
 
@@ -33,12 +32,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ matrix.qt_version }}
-
-      - name: Setup MSVC Environment (Windows)
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
+          arch: ${{ matrix.arch }}
 
       - name: Debug - Check environment (Windows)
         if: runner.os == 'Windows'
@@ -46,23 +40,12 @@ jobs:
         run: |
           qmake -v
           where qmake
-          echo QMAKE_MSC_VER: %QMAKE_MSC_VER%
-          cl.exe
-
-      - name: Debug - Check environment (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          qmake -v
-          which qmake
-          ls -la app/
 
       - name: Qmake (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          echo Qt5_Dir=%Qt5_Dir%
-          echo Trying without -spec...
-          qmake moonlight-qt.pro CONFIG+=release
+          qmake moonlight-qt.pro -spec win32-msvc CONFIG+=release
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
@@ -70,33 +53,11 @@ jobs:
         run: |
           nmake /NOLOGO
 
-      - name: Qmake (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          qmake moonlight-qt.pro CONFIG+=release
-
-      - name: Build (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          make -j4
-
       - name: Upload Source Code (Windows)
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows' && always()
         with:
           name: GSLCloud-Windows-src-${{ env.CI_VERSION }}
-          path: |
-            app/gui/**
-            app/backend/**
-            app/settings/**
-            *.pro
-          if-no-files-found: warn
-
-      - name: Upload Source Code (macOS)
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'macOS' && always()
-        with:
-          name: GSLCloud-macOS-src-${{ env.CI_VERSION }}
           path: |
             app/gui/**
             app/backend/**
