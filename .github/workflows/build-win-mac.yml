@@ -1,5 +1,5 @@
 ---
-name: Build - Windows and macOS
+name: Build - Windows Source
 permissions:
   contents: read
 
@@ -14,56 +14,29 @@ jobs:
   build:
     env:
       CI_VERSION: ${{ inputs.ci_version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            qt_version: 6.7.0
-            arch: win64_msvc2022_64
-
-    runs-on: ${{ matrix.os }}
+    
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: ${{ matrix.qt_version }}
-          arch: ${{ matrix.arch }}
-          cache: false
-          aqtversion: ==v1.2.5
-
-      - name: Debug - Check environment (Windows)
-        if: runner.os == 'Windows'
-        shell: cmd
+      - name: Package Source Code
         run: |
-          qmake -v
-          where qmake
+          mkdir -p dist
+          tar czf dist/GSLCloud-Source-${{ env.CI_VERSION }}.tar.gz \
+            --exclude='.git' \
+            --exclude='*.o' \
+            --exclude='*.a' \
+            --exclude='Makefile' \
+            --exclude='debug' \
+            --exclude='release' \
+            .
 
-      - name: Qmake (Windows)
-        if: runner.os == 'Windows'
-        shell: cmd
-        run: |
-          qmake moonlight-qt.pro -spec win32-msvc CONFIG+=release
-
-      - name: Build (Windows)
-        if: runner.os == 'Windows'
-        shell: cmd
-        run: |
-          nmake /NOLOGO
-
-      - name: Upload Source Code (Windows)
+      - name: Upload Source Code
         uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows' && always()
         with:
-          name: GSLCloud-Windows-src-${{ env.CI_VERSION }}
-          path: |
-            app/gui/**
-            app/backend/**
-            app/settings/**
-            *.pro
-          if-no-files-found: warn
+          name: GSLCloud-Source-${{ env.CI_VERSION }}
+          path: dist/GSLCloud-Source-${{ env.CI_VERSION }}.tar.gz
+          if-no-files-found: error
 
