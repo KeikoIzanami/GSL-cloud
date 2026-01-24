@@ -1,0 +1,59 @@
+executing config test SL
++ cd '/Users/nguyenquoc/Downloads/goslynk cloud/config.tests/SL' && /opt/homebrew/opt/qt@5/bin/qmake  -spec /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang "CONFIG -= qt debug_and_release app_bundle lib_bundle" '/Users/nguyenquoc/Downloads/goslynk cloud/config.tests/SL'
+> Project WARNING: Qt has only been tested with version 14 of the platform SDK, you're using 26.
+> Project WARNING: This is an unsupported configuration. You may experience build issues, and by using
+> Project WARNING: the 26.2 SDK you are opting in to new features that Qt has not been prepared for.
+> Project WARNING: Please downgrade the SDK you use to build your app to version 14, or configure
+> Project WARNING: with CONFIG+=sdk_no_version_check when running qmake to silence this warning.
++ cd '/Users/nguyenquoc/Downloads/goslynk cloud/config.tests/SL' && MAKEFLAGS= make
+> /Library/Developer/CommandLineTools/usr/bin/clang++ -c -pipe -stdlib=libc++ -O2  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mmacosx-version-min=10.13 -Wall -Wextra -fPIC  -I. -I/opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang -o main.o main.cpp
+> main.cpp:1:10: fatal error: 'SLVideo.h' file not found
+>     1 | #include <SLVideo.h>
+>       |          ^~~~~~~~~~~
+> 1 error generated.
+> make: *** [main.o] Error 1
+test SL FAILED
+executing config test EGL
++ cd '/Users/nguyenquoc/Downloads/goslynk cloud/config.tests/EGL' && /opt/homebrew/opt/qt@5/bin/qmake  -spec /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang "CONFIG -= qt debug_and_release app_bundle lib_bundle" '/Users/nguyenquoc/Downloads/goslynk cloud/config.tests/EGL'
+> Project WARNING: Qt has only been tested with version 14 of the platform SDK, you're using 26.
+> Project WARNING: This is an unsupported configuration. You may experience build issues, and by using
+> Project WARNING: the 26.2 SDK you are opting in to new features that Qt has not been prepared for.
+> Project WARNING: Please downgrade the SDK you use to build your app to version 14, or configure
+> Project WARNING: with CONFIG+=sdk_no_version_check when running qmake to silence this warning.
+> Project ERROR: sdl2 development package not found
+test EGL FAILED
+executing config test SL
++ cd /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/SL && MAKEFLAGS= make distclean
+> /opt/homebrew/opt/qt@5/bin/qmake -o Makefile SL.pro -spec /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang 'CONFIG -= qt debug_and_release app_bundle lib_bundle'
+> Project WARNING: Qt has only been tested with version 14 of the platform SDK, you're using 26.
+> Project WARNING: This is an unsupported configuration. You may experience build issues, and by using
+> Project WARNING: the 26.2 SDK you are opting in to new features that Qt has not been prepared for.
+> Project WARNING: Please downgrade the SDK you use to build your app to version 14, or configure
+> Project WARNING: with CONFIG+=sdk_no_version_check when running qmake to silence this warning.
+> rm -f main.o
+> rm -f *~ core *.core
+> rm -f SL 
+> rm -f Makefile
++ cd /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/SL && /opt/homebrew/opt/qt@5/bin/qmake  -spec /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang "CONFIG -= qt debug_and_release app_bundle lib_bundle" /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/SL
+> Project WARNING: Qt has only been tested with version 14 of the platform SDK, you're using 26.
+> Project WARNING: This is an unsupported configuration. You may experience build issues, and by using
+> Project WARNING: the 26.2 SDK you are opting in to new features that Qt has not been prepared for.
+> Project WARNING: Please downgrade the SDK you use to build your app to version 14, or configure
+> Project WARNING: with CONFIG+=sdk_no_version_check when running qmake to silence this warning.
++ cd /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/SL && MAKEFLAGS= make
+> /Library/Developer/CommandLineTools/usr/bin/clang++ -c -pipe -stdlib=libc++ -O2  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mmacosx-version-min=10.13 -Wall -Wextra -fPIC  -I. -I/opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang -o main.o main.cpp
+> main.cpp:1:10: fatal error: 'SLVideo.h' file not found
+>     1 | #include <SLVideo.h>
+>       |          ^~~~~~~~~~~
+> 1 error generated.
+> make: *** [main.o] Error 1
+test SL FAILED
+executing config test EGL
++ cd /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/EGL && /opt/homebrew/opt/qt@5/bin/qmake  -spec /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/macx-clang "CONFIG -= qt debug_and_release app_bundle lib_bundle" /Users/nguyenquoc/Downloads/goslynk-cloud/config.tests/EGL
+> Project WARNING: Qt has only been tested with version 14 of the platform SDK, you're using 26.
+> Project WARNING: This is an unsupported configuration. You may experience build issues, and by using
+> Project WARNING: the 26.2 SDK you are opting in to new features that Qt has not been prepared for.
+> Project WARNING: Please downgrade the SDK you use to build your app to version 14, or configure
+> Project WARNING: with CONFIG+=sdk_no_version_check when running qmake to silence this warning.
+> Project ERROR: sdl2 development package not found
+test EGL FAILED
