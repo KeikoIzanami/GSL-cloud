@@ -22,7 +22,7 @@ jobs:
           - os: windows-2022
             qt_version: 5.15.2
           # macOS
-          - os: macos-13
+          - os: macos-15
             qt_version: 5.15.2
 
     runs-on: ${{ matrix.os }}
@@ -31,7 +31,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
 
       - name: Install create-dmg (macOS)
