@@ -33,6 +33,8 @@ jobs:
         with:
           version: ${{ matrix.qt_version }}
           arch: ${{ matrix.arch }}
+          cache: false
+          aqtversion: ==v1.2.5
 
       - name: Debug - Check environment (Windows)
         if: runner.os == 'Windows'
