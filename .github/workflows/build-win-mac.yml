@@ -44,19 +44,45 @@ jobs:
         with:
           cache: true
           version: ${{ matrix.qt_version }}
+          modules: 'qtquickcontrols2 qtwebengine'
+
+      - name: Setup MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Check if required libraries exist
+          if (Test-Path "libs/windows") {
+            Write-Host "Windows libraries found"
+          } else {
+            Write-Host "Warning: Windows libraries not found in libs/windows"
+          }
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install ffmpeg opus
+          # Check if required libraries exist
+          if [ -d "libs/mac" ]; then
+            echo "macOS libraries found"
+          else
+            echo "Warning: macOS libraries not found in libs/mac"
+          fi
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          qmake
+          qmake -config release
           nmake
 
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
-          qmake
+          qmake -config release
           make -j4
 
       - name: Package (macOS)
