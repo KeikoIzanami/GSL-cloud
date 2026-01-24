@@ -1,0 +1,90 @@
+---
+name: Build - Windows and macOS
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      ci_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    env:
+      CI_VERSION: ${{ inputs.ci_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows
+          - os: windows-2022
+            qt_version: 5.15.2
+          # macOS
+          - os: macos-13
+            qt_version: 5.15.2
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+
+      - name: Install create-dmg (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install node
+          npm install --global create-dmg
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          cache: true
+          version: ${{ matrix.qt_version }}
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          qmake
+          nmake
+
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          qmake
+          make -j4
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          if [ -f scripts/generate-dmg.sh ]; then
+            bash scripts/generate-dmg.sh
+          else
+            echo "DMG script not found, skipping packaging"
+          fi
+
+      - name: Upload Binaries (Windows)
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: GSLCloud-Windows-${{ env.CI_VERSION }}
+          path: |
+            app/**/*.exe
+            app/**/*.dll
+          if-no-files-found: warn
+
+      - name: Upload Binaries (macOS)
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'macOS'
+        with:
+          name: GSLCloud-macOS-${{ env.CI_VERSION }}
+          path: |
+            app/**/*.app
+            app/**/*.dmg
+          if-no-files-found: warn

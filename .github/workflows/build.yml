@@ -1,0 +1,36 @@
+---
+name: Build
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      ci_version: ${{ steps.set-ci-version.outputs.ci_version }}
+    steps:
+      - name: Set CI version
+        id: set-ci-version
+        shell: bash
+        run: |
+          CI_VERSION=`echo ${GITHUB_SHA} | cut -c1-6`
+          echo "ci_version=${CI_VERSION}" >> "${GITHUB_OUTPUT}"
+
+  build-windows-macos:
+    needs: setup
+    uses: ./.github/workflows/build-win-mac.yml
+    with:
+      ci_version: ${{ needs.setup.outputs.ci_version }}
