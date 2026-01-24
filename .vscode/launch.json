@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch GSLCloud (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/app/release/GSLCloud.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/app/release",
+            "environment": [],
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Launch GSLCloud (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/app/GSLCloud.app/Contents/MacOS/GSLCloud",
+            "args": [],
+            "cwd": "${workspaceFolder}/app"
+        }
+    ]
+}

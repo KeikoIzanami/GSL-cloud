@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "qmake",
+            "type": "shell",
+            "command": "qmake",
+            "args": [
+                "moonlight-qt.pro",
+                "-spec",
+                "win32-msvc",
+                "CONFIG+=release"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "nmake",
+            "type": "shell",
+            "command": "nmake",
+            "args": ["release"],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["qmake"]
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "nmake",
+            "args": ["distclean"],
+            "problemMatcher": []
+        },
+        {
+            "label": "build",
+            "dependsOn": ["nmake"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
