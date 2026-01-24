@@ -60,7 +60,9 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          qmake moonlight-qt.pro -spec win32-msvc CONFIG+=release
+          echo Qt5_Dir=%Qt5_Dir%
+          echo Trying without -spec...
+          qmake moonlight-qt.pro CONFIG+=release
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
