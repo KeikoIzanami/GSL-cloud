@@ -34,12 +34,20 @@ jobs:
         with:
           version: ${{ matrix.qt_version }}
 
+      - name: Setup MSVC Environment (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
       - name: Debug - Check environment (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
           qmake -v
           where qmake
+          echo QMAKE_MSC_VER: %QMAKE_MSC_VER%
+          cl.exe
 
       - name: Debug - Check environment (macOS)
         if: runner.os == 'macOS'
