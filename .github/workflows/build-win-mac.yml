@@ -18,10 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Windows
           - os: windows-latest
             qt_version: 5.15.2
-          # macOS
           - os: macos-latest
             qt_version: 5.15.2
 
@@ -35,51 +33,64 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ matrix.qt_version }}
-          arch: ${{ runner.os == 'Windows' && 'win64_msvc2019_64' || '' }}
 
-      - name: Setup MSVC (Windows)
+      - name: Debug - Check environment (Windows)
         if: runner.os == 'Windows'
-        uses: microsoft/setup-msbuild@v1.0.2
-        
+        shell: cmd
+        run: |
+          qmake -v
+          where qmake
+
+      - name: Debug - Check environment (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          qmake -v
+          which qmake
+          ls -la app/
+
+      - name: Qmake (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          qmake moonlight-qt.pro -spec win32-msvc CONFIG+=release
+
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          nmake /NOLOGO
+
+      - name: Qmake (macOS)
+        if: runner.os == 'macOS'
+        run: |
           qmake moonlight-qt.pro CONFIG+=release
-          nmake release
 
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
-          qmake moonlight-qt.pro CONFIG+=release
-          make -j$(sysctl -n hw.ncpu)
+          make -j4
 
-      - name: Package (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          if [ -f scripts/generate-dmg.sh ]; then
-            bash scripts/generate-dmg.sh
-          else
-            echo "DMG script not found, skipping packaging"
-          fi
-
-      - name: Upload Binaries (Windows)
+      - name: Upload Source Code (Windows)
         uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && always()
         with:
-          name: GSLCloud-Windows-${{ env.CI_VERSION }}
+          name: GSLCloud-Windows-src-${{ env.CI_VERSION }}
           path: |
-            app/**/*.exe
-            app/**/*.dll
+            app/gui/**
+            app/backend/**
+            app/settings/**
+            *.pro
           if-no-files-found: warn
 
-      - name: Upload Binaries (macOS)
+      - name: Upload Source Code (macOS)
         uses: actions/upload-artifact@v4
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && always()
         with:
-          name: GSLCloud-macOS-${{ env.CI_VERSION }}
+          name: GSLCloud-macOS-src-${{ env.CI_VERSION }}
           path: |
-            app/**/*.app
-            app/**/*.dmg
+            app/gui/**
+            app/backend/**
+            app/settings/**
+            *.pro
           if-no-files-found: warn
+
