@@ -11,6 +11,73 @@ Rectangle {
     // Signal để quay lại
     signal backClicked()
 
+    // API Base URL - có thể config từ environment
+    property string apiBaseUrl: "http://localhost:3000"
+    property var packages: []
+    property bool isLoading: true
+
+    Component.onCompleted: {
+        loadPackages()
+    }
+
+    function loadPackages() {
+        isLoading = true
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", apiBaseUrl + "/hosting/packages", true)
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                isLoading = false
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText)
+                        if (response.success && response.data) {
+                            packages = response.data
+                            console.log("Loaded packages:", packages)
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse packages:", e)
+                    }
+                } else {
+                    console.error("Failed to load packages:", xhr.status)
+                }
+            }
+        }
+        xhr.send()
+    }
+
+    function subscribePackage(packageId) {
+        console.log("Subscribing to package:", packageId)
+        var xhr = new XMLHttpRequest()
+        xhr.open("POST", apiBaseUrl + "/hosting/subscribe", true)
+        xhr.setRequestHeader("Content-Type", "application/json")
+        
+        var userId = "user123" // TODO: Lấy từ login session
+        var payload = {
+            userId: userId,
+            packageId: packageId
+        }
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText)
+                        if (response.success) {
+                            console.log("Subscription successful:", response.data)
+                            successDialog.text = "✓ Đăng ký thành công!\nID: " + response.data.subscriptionId
+                            successDialog.open()
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse response:", e)
+                    }
+                } else {
+                    console.error("Subscription failed:", xhr.status)
+                }
+            }
+        }
+        xhr.send(JSON.stringify(payload))
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 20
@@ -63,16 +130,162 @@ Rectangle {
             }
         }
 
-        // Packages Grid
+        // Loading indicator
+        Rectangle {
+            visible: isLoading
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: "transparent"
+            
+            Column {
+                anchors.centerIn: parent
+                spacing: 10
+                
+                BusyIndicator {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    running: isLoading
+                }
+                
+                Label {
+                    text: "Đang tải cấu hình..."
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+        }
+
+        // Packages Grid - Dynamic from API
         GridLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            columns: 4
+            columns: Math.min(4, packages.length > 0 ? packages.length : 1)
             columnSpacing: 15
             rowSpacing: 15
+            visible: !isLoading && packages.length > 0
 
-            // Basic Package
-            Rectangle {
+            Repeater {
+                model: packages
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    color: modelData.popular ? "#1a7a3a" : "#3a4a5a"
+                    radius: 10
+                    border.color: modelData.popular ? "#00ff00" : "transparent"
+                    border.width: modelData.popular ? 2 : 0
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 15
+                        spacing: 10
+
+                        RowLayout {
+                            spacing: 10
+                            Layout.fillWidth: true
+
+                            Label {
+                                text: modelData.name
+                                font.pixelSize: 16
+                                font.bold: true
+                                color: "#ffffff"
+                                Layout.fillWidth: true
+                            }
+
+                            Rectangle {
+                                visible: modelData.popular
+                                color: "#ff3333"
+                                radius: 4
+                                Layout.preferredWidth: 70
+                                Layout.preferredHeight: 20
+
+                                Label {
+                                    anchors.centerIn: parent
+                                    text: "UNITD. PLUS"
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: "#ffffff"
+                                }
+                            }
+                        }
+
+                        Label {
+                            text: modelData.price.toLocaleString() + "₫/h"
+                            font.pixelSize: 20
+                            font.bold: true
+                            color: "#00ff00"
+                        }
+
+                        Label {
+                            text: modelData.description
+                            font.pixelSize: 12
+                            color: "#cccccc"
+                            wrapMode: Text.WordWrap
+                        }
+
+                        Rectangle {
+                            height: 1
+                            Layout.fillWidth: true
+                            color: "#555555"
+                        }
+
+                        Label {
+                            text: "Cấu hình máy"
+                            font.pixelSize: 12
+                            font.bold: true
+                            color: "#ffffff"
+                        }
+
+                        ColumnLayout {
+                            spacing: 5
+                            Layout.fillWidth: true
+
+                            RowLayout {
+                                spacing: 5
+                                Label {
+                                    text: "CPU: " + modelData.cpu
+                                    font.pixelSize: 11
+                                    color: "#cccccc"
+                                }
+                            }
+
+                            RowLayout {
+                                spacing: 5
+                                Label {
+                                    text: "GPU: " + modelData.gpu
+                                    font.pixelSize: 11
+                                    color: "#cccccc"
+                                }
+                            }
+
+                            RowLayout {
+                                spacing: 5
+                                Label {
+                                    text: "RAM: " + modelData.ram
+                                    font.pixelSize: 11
+                                    color: "#cccccc"
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+
+                        Button {
+                            text: "THUÊ NGAY"
+                            Layout.fillWidth: true
+                            Material.accent: Material.Orange
+                            onClicked: {
+                                subscribePackage(modelData.id)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Old static package below - will be removed
+        Rectangle {
+            visible: false
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 color: "#3a4a5a"
@@ -523,6 +736,15 @@ Rectangle {
                     }
                 }
             }
+        }
+    }
+
+    Dialog {
+        id: successDialog
+        title: "Đăng ký thành công"
+        standardButtons: Dialog.Ok
+        onAccepted: {
+            close()
         }
     }
 }

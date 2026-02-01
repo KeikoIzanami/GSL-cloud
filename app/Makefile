@@ -31,8 +31,8 @@ DEL_DIR       = rmdir
 MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
-DISTNAME      = GSLCloud0.1.23.2
-DISTDIR = /Users/nguyenquoc/Downloads/goslynk-cloud/app/.tmp/GSLCloud0.1.23.2
+DISTNAME      = GSLCloud6.1.0
+DISTDIR = /Users/nguyenquoc/Downloads/goslynk-cloud/app/.tmp/GSLCloud6.1.0
 SUBTARGETS    =  \
 		debug \
 		release

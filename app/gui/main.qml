@@ -419,6 +419,23 @@ ApplicationWindow {
             }
 
             NavigableToolButton {
+                id: hostingButton
+
+                iconSource: "qrc:/res/settings.svg"
+
+                onClicked: navigateTo("qrc:/gui/HostingView.qml", HostingView)
+
+                Keys.onDownPressed: {
+                    stackView.currentItem.forceActiveFocus(Qt.TabFocus)
+                }
+
+                ToolTip.delay: 1000
+                ToolTip.timeout: 3000
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Thuê Máy")
+            }
+
+            NavigableToolButton {
                 id: settingsButton
 
                 iconSource:  "qrc:/res/settings.svg"
