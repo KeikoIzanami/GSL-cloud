@@ -12,6 +12,9 @@ import SdlGamepadKeyNavigation 1.0
 
 ApplicationWindow {
     property bool pollingActive: false
+    property bool isLoggedIn: false
+    property string currentUserId: ""
+    property string currentUsername: ""
 
     // Set by SettingsView to force the back operation to pop all
     // pages except the initial view. This is required when doing
@@ -111,7 +114,8 @@ ApplicationWindow {
             // Perform our early initialization before constructing
             // the initial view and pushing it to the StackView
             doEarlyInit()
-            push(initialView)
+            // Always start with login view
+            push("qrc:/gui/LoginView.qml")
         }
 
         onCurrentItemChanged: {
@@ -148,6 +152,23 @@ ApplicationWindow {
         // when Menu is consumed by a focused control.
         Keys.onHangupPressed: {
             settingsButton.clicked()
+        }
+
+        // Handle login success from LoginView
+        Connections {
+            target: stackView.currentItem
+            ignoreUnknownSignals: true
+            
+            onLoginSuccessful: function(userId, username) {
+                isLoggedIn = true
+                currentUserId = userId
+                currentUsername = username
+                console.log("Login successful! UserId:", userId, "Username:", username)
+                
+                // Navigate to PcView (or HostingView if preferred)
+                stackView.clear(StackView.PopTransition)
+                stackView.push("qrc:/gui/PcView.qml")
+            }
         }
     }
 
@@ -232,6 +253,7 @@ ApplicationWindow {
     header: ToolBar {
         id: toolBar
         height: 60
+        visible: isLoggedIn  // Hide toolbar during login
         anchors.topMargin: 5
         anchors.bottomMargin: 5
 

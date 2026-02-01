@@ -3290,8 +3290,8 @@ app.post("/login", async (req, res) => {
 
     res.json({
       success: true,
-      user: {
-        id: user.id,
+      data: {
+        userId: user.id,
         username: user.username,
         email: user.email,
         role: user.role,

@@ -21,5 +21,6 @@
         <file alias="gui/CenteredGridView.qml">gui/CenteredGridView.qml</file>
         <file alias="gui/CliPair.qml">gui/CliPair.qml</file>
         <file alias="gui/HostingView.qml">gui/HostingView.qml</file>
+        <file alias="gui/LoginView.qml">gui/LoginView.qml</file>
     </qresource>
 </RCC>

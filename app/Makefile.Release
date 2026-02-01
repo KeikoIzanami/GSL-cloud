@@ -104,6 +104,7 @@ SOURCES       = backend/nvaddress.cpp \
 		release/gui_AutoResizingComboBox_qml.cpp \
 		release/gui_GamepadMapper_qml.cpp \
 		release/gui_AppView_qml.cpp \
+		release/gui_LoginView_qml.cpp \
 		release/gui_HostingView_qml.cpp \
 		release/gui_PcView_qml.cpp \
 		release/gui_CliPair_qml.cpp \
@@ -191,6 +192,7 @@ OBJECTS       = release/nvaddress.o \
 		release/gui_AutoResizingComboBox_qml.o \
 		release/gui_GamepadMapper_qml.o \
 		release/gui_AppView_qml.o \
+		release/gui_LoginView_qml.o \
 		release/gui_HostingView_qml.o \
 		release/gui_PcView_qml.o \
 		release/gui_CliPair_qml.o \
@@ -412,7 +414,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents gui/CliQuitStreamSegue.qml gui/NavigableMenuItem.qml gui/NavigableMenu.qml gui/NavigableDialog.qml gui/AutoResizingComboBox.qml gui/GamepadMapper.qml gui/AppView.qml gui/HostingView.qml gui/PcView.qml gui/CliPair.qml gui/NavigableItemDelegate.qml gui/CliStartStreamSegue.qml gui/NavigableToolButton.qml gui/ErrorMessageDialog.qml gui/QuitSegue.qml gui/CenteredGridView.qml gui/SettingsView.qml gui/NavigableMessageDialog.qml gui/main.qml gui/StreamSegue.qml $(DISTDIR)/
+	$(COPY_FILE) --parents gui/CliQuitStreamSegue.qml gui/NavigableMenuItem.qml gui/NavigableMenu.qml gui/NavigableDialog.qml gui/AutoResizingComboBox.qml gui/GamepadMapper.qml gui/AppView.qml gui/LoginView.qml gui/HostingView.qml gui/PcView.qml gui/CliPair.qml gui/NavigableItemDelegate.qml gui/CliStartStreamSegue.qml gui/NavigableToolButton.qml gui/ErrorMessageDialog.qml gui/QuitSegue.qml gui/CenteredGridView.qml gui/SettingsView.qml gui/NavigableMessageDialog.qml gui/main.qml gui/StreamSegue.qml $(DISTDIR)/
 	$(COPY_FILE) --parents qml.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc qml_qmlcache.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/Cellar/qt@5/5.15.18/mkspecs/features/data/dummy.cpp $(DISTDIR)/
@@ -444,9 +446,9 @@ check: first
 
 benchmark: first
 
-compiler_qmlcache_make_all: release/gui_CliQuitStreamSegue_qml.cpp release/gui_NavigableMenuItem_qml.cpp release/gui_NavigableMenu_qml.cpp release/gui_NavigableDialog_qml.cpp release/gui_AutoResizingComboBox_qml.cpp release/gui_GamepadMapper_qml.cpp release/gui_AppView_qml.cpp release/gui_HostingView_qml.cpp release/gui_PcView_qml.cpp release/gui_CliPair_qml.cpp release/gui_NavigableItemDelegate_qml.cpp release/gui_CliStartStreamSegue_qml.cpp release/gui_NavigableToolButton_qml.cpp release/gui_ErrorMessageDialog_qml.cpp release/gui_QuitSegue_qml.cpp release/gui_CenteredGridView_qml.cpp release/gui_SettingsView_qml.cpp release/gui_NavigableMessageDialog_qml.cpp release/gui_main_qml.cpp release/gui_StreamSegue_qml.cpp
+compiler_qmlcache_make_all: release/gui_CliQuitStreamSegue_qml.cpp release/gui_NavigableMenuItem_qml.cpp release/gui_NavigableMenu_qml.cpp release/gui_NavigableDialog_qml.cpp release/gui_AutoResizingComboBox_qml.cpp release/gui_GamepadMapper_qml.cpp release/gui_AppView_qml.cpp release/gui_LoginView_qml.cpp release/gui_HostingView_qml.cpp release/gui_PcView_qml.cpp release/gui_CliPair_qml.cpp release/gui_NavigableItemDelegate_qml.cpp release/gui_CliStartStreamSegue_qml.cpp release/gui_NavigableToolButton_qml.cpp release/gui_ErrorMessageDialog_qml.cpp release/gui_QuitSegue_qml.cpp release/gui_CenteredGridView_qml.cpp release/gui_SettingsView_qml.cpp release/gui_NavigableMessageDialog_qml.cpp release/gui_main_qml.cpp release/gui_StreamSegue_qml.cpp
 compiler_qmlcache_clean:
-	-$(DEL_FILE) release/gui_CliQuitStreamSegue_qml.cpp release/gui_NavigableMenuItem_qml.cpp release/gui_NavigableMenu_qml.cpp release/gui_NavigableDialog_qml.cpp release/gui_AutoResizingComboBox_qml.cpp release/gui_GamepadMapper_qml.cpp release/gui_AppView_qml.cpp release/gui_HostingView_qml.cpp release/gui_PcView_qml.cpp release/gui_CliPair_qml.cpp release/gui_NavigableItemDelegate_qml.cpp release/gui_CliStartStreamSegue_qml.cpp release/gui_NavigableToolButton_qml.cpp release/gui_ErrorMessageDialog_qml.cpp release/gui_QuitSegue_qml.cpp release/gui_CenteredGridView_qml.cpp release/gui_SettingsView_qml.cpp release/gui_NavigableMessageDialog_qml.cpp release/gui_main_qml.cpp release/gui_StreamSegue_qml.cpp
+	-$(DEL_FILE) release/gui_CliQuitStreamSegue_qml.cpp release/gui_NavigableMenuItem_qml.cpp release/gui_NavigableMenu_qml.cpp release/gui_NavigableDialog_qml.cpp release/gui_AutoResizingComboBox_qml.cpp release/gui_GamepadMapper_qml.cpp release/gui_AppView_qml.cpp release/gui_LoginView_qml.cpp release/gui_HostingView_qml.cpp release/gui_PcView_qml.cpp release/gui_CliPair_qml.cpp release/gui_NavigableItemDelegate_qml.cpp release/gui_CliStartStreamSegue_qml.cpp release/gui_NavigableToolButton_qml.cpp release/gui_ErrorMessageDialog_qml.cpp release/gui_QuitSegue_qml.cpp release/gui_CenteredGridView_qml.cpp release/gui_SettingsView_qml.cpp release/gui_NavigableMessageDialog_qml.cpp release/gui_main_qml.cpp release/gui_StreamSegue_qml.cpp
 release/gui_CliQuitStreamSegue_qml.cpp: gui/CliQuitStreamSegue.qml \
 		/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen
 	/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen --resource=/Users/nguyenquoc/Downloads/goslynk-cloud/app/qml.qrc -o release/gui_CliQuitStreamSegue_qml.cpp gui/CliQuitStreamSegue.qml
@@ -474,6 +476,10 @@ release/gui_GamepadMapper_qml.cpp: gui/GamepadMapper.qml \
 release/gui_AppView_qml.cpp: gui/AppView.qml \
 		/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen
 	/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen --resource=/Users/nguyenquoc/Downloads/goslynk-cloud/app/qml.qrc -o release/gui_AppView_qml.cpp gui/AppView.qml
+
+release/gui_LoginView_qml.cpp: gui/LoginView.qml \
+		/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen
+	/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen --resource=/Users/nguyenquoc/Downloads/goslynk-cloud/app/qml.qrc -o release/gui_LoginView_qml.cpp gui/LoginView.qml
 
 release/gui_HostingView_qml.cpp: gui/HostingView.qml \
 		/opt/homebrew/Cellar/qt@5/5.15.18/bin/qmlcachegen
@@ -637,6 +643,7 @@ release/qrc_qml_qmlcache.cpp: qml_qmlcache.qrc \
 		gui/AutoResizingComboBox.qml \
 		gui/GamepadMapper.qml \
 		gui/AppView.qml \
+		gui/LoginView.qml \
 		gui/HostingView.qml \
 		gui/PcView.qml \
 		gui/CliPair.qml \
@@ -4409,6 +4416,9 @@ release/gui_GamepadMapper_qml.o: release/gui_GamepadMapper_qml.cpp
 
 release/gui_AppView_qml.o: release/gui_AppView_qml.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/gui_AppView_qml.o release/gui_AppView_qml.cpp
+
+release/gui_LoginView_qml.o: release/gui_LoginView_qml.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/gui_LoginView_qml.o release/gui_LoginView_qml.cpp
 
 release/gui_HostingView_qml.o: release/gui_HostingView_qml.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/gui_HostingView_qml.o release/gui_HostingView_qml.cpp

@@ -499,6 +499,7 @@ debug/qrc_qml.cpp: qml.qrc \
 		gui/AutoResizingComboBox.qml \
 		gui/GamepadMapper.qml \
 		gui/AppView.qml \
+		gui/LoginView.qml \
 		gui/HostingView.qml \
 		gui/PcView.qml \
 		gui/CliPair.qml \
